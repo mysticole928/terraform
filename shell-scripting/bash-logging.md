@@ -1,7 +1,17 @@
-# Logging Terraform Using Bash
+# Bash: Automatically Activate Terraform Logging in the Current Directory
 
-Add the following to `~/.bashrc`.
-(`~/.bash_profile` on MacOS.)
+This function checks:
+
+- The .terraform/ directory exists (Terraform has been initialized).
+- `.tf` files are present (Terraform files exist).
+
+If either condition is met, it sets `TF_LOG` to `INFO` and `TF_LOG_PATH` to the current directory.
+
+Otherwise, it disables Terraform logging.
+
+The function is assigned to PROMPT_COMMAND, which executes it automatically.
+
+Add the following to `~/.bashrc`.  (`~/.bash_profile` on MacOS.)
 
 ```bash
 log_terraform() {
@@ -18,15 +28,3 @@ log_terraform() {
 PROMPT_COMMAND="log_terraform; ${PROMPT_COMMAND:-}"
 ```
 
-## How This Works
-
-`log_terraform()` runs before every new prompt.
-
-It checks if either:
-- The .terraform/ directory exists (Terraform has been initialized).
-- `.tf` files are present (Terraform files exist).
-
-If either condition is met, it enables logging.
-Otherwise, it disables Terraform logging.
-
-The function is assigned to PROMPT_COMMAND, which executes it automatically.
