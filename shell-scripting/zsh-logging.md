@@ -1,10 +1,16 @@
 # Add Logging to Terraform Scripts
 
-## Check for `.tf` Files
+Here are two options for automatically turning on Terraform logging using the command line. 
 
-This snippet, when added to a `.zshrc` file checks for `.tf` files in the current directory.
+The log filename format: `terraform-yyyymmdd-hhmm.log`
 
-When there are, it sets the `TF_LOG` and `TF_LOG_PATH` values for local logging.
+This snippit does **not** clean up old logfiles.
+
+There are two options to check for Terraform files.  The first one checks for `.tf` files and the second checks for a `.terraform` directory.
+
+## Option 1: Check for `.tf` Files
+
+When `.tf` files exist, it sets `TF_LOG` and `TF_LOG_PATH` values for local logging.
 
 ```zsh
 log_terraform() {
@@ -25,9 +31,13 @@ autoload -Uz add-zsh-hook
 add-zsh-hook precmd log_terraform
 ```
 
-## Check for `.terraform` directory
+## Option 2: Check for `.terraform` directory
 
 Alternatively, check for the `.terraform` directory in the current directory.
+
+When a `.terraform` directory is present, it sets `TF_LOG` and `TF_LOG_PATH` values for local logging.
+
+After running `terraform init` the first time, exit the directory and re-enter it to activate logging.
 
 ```shell
 log_terraform() {
@@ -46,14 +56,3 @@ log_terraform() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd log_terraform
 ```
-
-
-### Pros:
-
-- Ensures that logging is enabled only when Terraform has been initialized.
-- Prevents logging in directories with `.tf` files that haven’t been used yet.
-
-### Cons:
-
-- If you cd into a directory before running terraform init, logging won’t be enabled.
-- Might miss logging if `terraform init` is not required (e.g., for terraform plan with a remote backend).
